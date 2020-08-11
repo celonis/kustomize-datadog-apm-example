@@ -34,6 +34,7 @@ spec:
       containers:
       - name: foo
         image: my-java-app
+        env: []
         envFrom: []
   selector:
     matchLabels:
@@ -55,3 +56,22 @@ If you run `kustomize build $DEMO_HOME` again, you will see the following change
 - The `JDK_JAVA_OPTIONS` environment variable is set in order to attach the APM agent at runtime
 - The `DD_AGENT_HOST` environment variable points to the host IP using the downward API
 - The `DD_SERVICE_NAME` contains the value of deployment's `app` label 
+
+## Advanced Usage
+Here are some advanced patterns which are useful when productionizing this approach for your team.
+### Versioning
+When importing the remote transformers, you can also target a specific revisions. For example, check out branch `release-1.1` which adds some configuration for logs injection and service name mapping:
+
+```yaml
+transformers:
+- github.com:celonis/kustomize-datadog-apm-example?ref=release-1.1
+```
+
+Or, if you want to make sure you don't run into any breaking changes in the configuration, stick to the initial v1.0.0 release:
+```yaml
+transformers:
+- github.com:celonis/kustomize-datadog-apm-example?ref=v1.0.0
+```
+
+## Questions?
+If anything is unclear and you need some help, feel free to [create an issue](https://github.com/celonis/kustomize-datadog-apm-example/issues/new).

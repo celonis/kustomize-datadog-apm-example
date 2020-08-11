@@ -26,7 +26,22 @@ patch: |-
   - op: add
     path: /spec/template/spec/containers/0/env/-
     value:
-      name: DD_SERVICE_NAME
+      name: NAME
       valueFrom:
         fieldRef:
           fieldPath: metadata.labels['app']
+  - op: add
+    path: /spec/template/spec/containers/0/env/-
+    value:
+      name: DD_SERVICE_NAME
+      value: $(NAME)
+  - op: add
+    path: /spec/template/spec/containers/0/env/-
+    value:
+      name: DD_LOGS_INJECTION
+      value: "true"
+  - op: add
+    path: /spec/template/spec/containers/0/env/-
+    value:
+      name: DD_SERVICE_MAPPING
+      value: "postgresql:$(NAME)-db"

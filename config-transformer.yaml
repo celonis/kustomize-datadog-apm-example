@@ -1,0 +1,32 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: apm-config
+target:
+  name: .*
+  kind: Deployment
+patch: |-
+  - op: add
+    path: /spec/template/spec/containers/0/envFrom/-
+    value:
+      configMapRef:
+        name: datadog-apm-env
+  - op: add
+    path: /spec/template/spec/containers/0/env/-
+    value:
+      name: JDK_JAVA_OPTIONS
+      value: "-javaagent:/usr/share/dd-java-agent.jar"
+  - op: add
+    path: /spec/template/spec/containers/0/env/-
+    value:
+      name: DD_AGENT_HOST
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+  - op: add
+    path: /spec/template/spec/containers/0/env/-
+    value:
+      name: DD_SERVICE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.labels['app']
